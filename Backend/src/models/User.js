@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true },
-    password: { type: String, required: true },
+    password: { type: String, required: function() { return !this.googleId; } },
+    googleId: { type: String, unique: true, sparse: true },
     avatar: { type: String, default: "" },
     status: { type: String, enum: ["online", "offline", "busy"], default: "offline" },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
@@ -15,7 +16,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+  if (!this.password || !this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });

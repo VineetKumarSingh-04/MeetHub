@@ -8,6 +8,7 @@ import LandingPage from "./pages/public/LandingPage";
 import AuthPage from "./pages/public/AuthPage";
 import ForgotPassword from "./pages/public/ForgotPassword";
 import ResetPassword from "./pages/public/ResetPassword";
+import AuthSuccess from "./pages/public/AuthSuccess";
 
 // Dashboard
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -46,6 +47,7 @@ export default function App() {
             <Route path="/signup" element={<AuthPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/auth-success" element={<AuthSuccess />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* Protected */}

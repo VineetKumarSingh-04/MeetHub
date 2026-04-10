@@ -5,7 +5,10 @@ const onlineUsers = new Map(); // userId -> socketId
 
 const initSocket = (server) => {
   const io = new Server(server, {
-    cors: { origin: process.env.CLIENT_URL, credentials: true },
+    cors: { 
+      origin: (process.env.CLIENT_URL || "").split(",").map(url => url.trim()), 
+      credentials: true 
+    },
   });
 
   io.on("connection", (socket) => {

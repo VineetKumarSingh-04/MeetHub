@@ -3,10 +3,13 @@ const http = require("http");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./src/config/db");
-const { initSocket } = require("./src/socket/socketHandler");
 
 dotenv.config();
 connectDB();
+
+const session = require("express-session");
+const passport = require("./src/config/passport");
+const { initSocket } = require("./src/socket/socketHandler");
 
 const app = express();
 const server = http.createServer(app);
@@ -26,8 +29,21 @@ app.use(cors({
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
+// Passport & Session
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "meethub_secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Routes
-app.use("/api/auth", require("./src/routes/authRoutes"));
+const authRoutes = require("./src/routes/authRoutes");
+app.use("/api/auth", authRoutes);
+app.use("/v1/auth", authRoutes); // Support callback from Google Console screenshot
 app.use("/api/users", require("./src/routes/userRoutes"));
 app.use("/api/friends", require("./src/routes/friendRoutes"));
 app.use("/api/meetings", require("./src/routes/meetingRoutes"));

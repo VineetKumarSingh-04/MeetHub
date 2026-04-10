@@ -281,6 +281,10 @@ function LoginForm({ onSwitch }) {
     return e;
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+  };
+
   const handleSubmit = async (ev) => {
     ev.preventDefault();
     const e2 = validate();
@@ -339,7 +343,7 @@ function LoginForm({ onSwitch }) {
 
       <div className="auth-divider">or continue with</div>
 
-      <button className="btn-google">
+      <button type="button" className="btn-google" onClick={handleGoogleLogin}>
         <GoogleColorIcon /> Continue with Google
       </button>
 
@@ -367,6 +371,10 @@ function SignupForm({ onSwitch }) {
     if (form.password !== form.confirm) e.confirm = "Passwords do not match";
     if (!form.terms) e.terms = "You must accept the terms";
     return e;
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
   };
 
   const handleSubmit = async (ev) => {
@@ -449,7 +457,7 @@ function SignupForm({ onSwitch }) {
 
       <div className="auth-divider">or sign up with</div>
 
-      <button className="btn-google">
+      <button type="button" className="btn-google" onClick={handleGoogleLogin}>
         <GoogleColorIcon /> Continue with Google
       </button>
 
