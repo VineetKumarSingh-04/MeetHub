@@ -5,8 +5,7 @@ import PrivateRoute from "./components/common/PrivateRoute";
 
 // Public
 import LandingPage from "./pages/public/LandingPage";
-import Login from "./pages/public/Login";
-import Signup from "./pages/public/Signup";
+import AuthPage from "./pages/public/AuthPage";
 import ForgotPassword from "./pages/public/ForgotPassword";
 import ResetPassword from "./pages/public/ResetPassword";
 
@@ -43,8 +42,8 @@ export default function App() {
           <Routes>
             {/* Public */}
             <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/signup" element={<AuthPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/unauthorized" element={<Unauthorized />} />

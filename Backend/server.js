@@ -12,7 +12,17 @@ const app = express();
 const server = http.createServer(app);
 
 // Middleware
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowed = (process.env.CLIENT_URL || "").split(",").map(o => o.trim());
+    if (!origin || allowed.some(o => origin.startsWith(o.replace(/\/$/, "")))) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
