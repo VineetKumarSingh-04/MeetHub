@@ -541,15 +541,15 @@ export default function Dashboard() {
 
               {/* Profile */}
               <div className="flex items-center gap-2 pl-3 border-l border-white/10">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                  style={{ background:"linear-gradient(135deg,#7c3aed,#2563eb)" }}>
-                  {user?.name?.[0]?.toUpperCase() || "U"}
+                <div className="hidden md:block text-right">
+                  <p className="text-xs font-semibold text-white">{user?.name || "User"}</p>
+                  <p className="text-[10px] text-indigo-400 font-medium">Pro Plan</p>
                 </div>
-                <div className="hidden md:block">
-                  <p className="text-xs font-medium">{user?.name || "User"}</p>
-                  <p className="text-[10px] text-gray-500">Pro Plan</p>
-                </div>
-                <button onClick={handleLogout} className="ml-2 text-[10px] text-gray-500 hover:text-red-400 transition">Logout</button>
+                <button onClick={handleLogout} 
+                  className="ml-3 p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all flex items-center gap-1.5 text-[11px] font-semibold">
+                  <Icon d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" size={12} />
+                  Logout
+                </button>
               </div>
             </div>
           </header>

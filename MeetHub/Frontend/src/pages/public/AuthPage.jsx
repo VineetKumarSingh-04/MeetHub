@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../asset/logo.png";
 
@@ -470,7 +470,11 @@ export default function AuthPage() {
       <style>{CSS}</style>
       <div className="auth-card">
         <div className="auth-logo-wrap">
-          <img src={logo} alt="MeetHub" style={{ height: 56, marginBottom: ".75rem" }} />
+          <Link to="/" className="absolute top-6 left-6 flex items-center gap-2 text-gray-500 hover:text-white transition-colors group">
+            <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span className="text-sm font-medium">Home</span>
+          </Link>
+          <img src={logo} alt="MeetHub" style={{ height: 64, marginBottom: ".75rem" }} />
           <div className="auth-brand">MeetHub</div>
           <div className="auth-tagline">Connect. Collaborate. Create.</div>
         </div>

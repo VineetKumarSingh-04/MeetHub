@@ -214,14 +214,14 @@ export default function LandingPage() {
               <div className="flex items-center gap-6 anim-fade-in" style={{animationDelay:".3s"}}>
                 <div className="flex -space-x-3">
                   {[
-                    {init:"JD", bg:"linear-gradient(135deg,#fb7185,#e11d48)", name:"John Doe"},
-                    {init:"SK", bg:"linear-gradient(135deg,#34d399,#059669)", name:"Sarah Kim"},
-                    {init:"MR", bg:"linear-gradient(135deg,#fbbf24,#d97706)", name:"Mike Ross"},
-                    {init:"AL", bg:"linear-gradient(135deg,#22d3ee,#0891b2)", name:"Anna Lee"},
-                  ].map(({init,bg,name}) => (
-                    <div key={init} className="tooltip w-10 h-10 rounded-full border-2 border-slate-950 flex items-center justify-center text-xs font-bold hover:scale-110 transition-transform"
+                    {img:"https://i.pravatar.cc/150?u=jd", bg:"linear-gradient(135deg,#fb7185,#e11d48)", name:"John Doe"},
+                    {img:"https://i.pravatar.cc/150?u=sk", bg:"linear-gradient(135deg,#34d399,#059669)", name:"Sarah Kim"},
+                    {img:"https://i.pravatar.cc/150?u=mr", bg:"linear-gradient(135deg,#fbbf24,#d97706)", name:"Mike Ross"},
+                    {img:"https://i.pravatar.cc/150?u=al", bg:"linear-gradient(135deg,#22d3ee,#0891b2)", name:"Anna Lee"},
+                  ].map(({img,bg,name}, i) => (
+                    <div key={i} className="tooltip w-10 h-10 rounded-full border-2 border-slate-950 flex items-center justify-center overflow-hidden hover:scale-110 transition-transform"
                       style={{background:bg}} data-tip={name}>
-                      {init}
+                      <img src={img} alt={name} className="w-full h-full object-cover" />
                     </div>
                   ))}
                 </div>
