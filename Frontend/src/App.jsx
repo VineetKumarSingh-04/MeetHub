@@ -27,6 +27,7 @@ import ChangePassword from "./pages/user/ChangePassword";
 // Meetings
 import MeetingHistory from "./pages/meetings/MeetingHistory";
 import MeetingDetails from "./pages/meetings/MeetingDetails";
+import MeetingsPage from "./pages/meetings/MeetingsPage";
 
 // Settings
 import Settings from "./pages/settings/Settings";
@@ -67,6 +68,7 @@ export default function App() {
               <Route path="/profile/password" element={<ChangePassword />} />
 
               {/* Meetings */}
+              <Route path="/meetings" element={<MeetingsPage />} />
               <Route path="/meetings/history" element={<MeetingHistory />} />
               <Route path="/meetings/:id" element={<MeetingDetails />} />
 

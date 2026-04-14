@@ -118,6 +118,7 @@ function Sidebar({ collapsed, setCollapsed, activeNav, setActiveNav }) {
   const handleNav = (id) => {
     setActiveNav(id);
     if (id === "settings") navigate("/settings");
+    if (id === "meetings") navigate("/meetings");
     if (id === "messages") navigate("/dashboard");
   };
   return (
@@ -475,7 +476,7 @@ export default function Dashboard() {
                 </span>
                 <input value={search} onChange={e => setSearch(e.target.value)}
                   onFocus={() => setShowSearch(true)} onBlur={() => setTimeout(() => setShowSearch(false), 200)}
-                  placeholder="Search meetings, people..." className="input-field pl-10 py-2 text-sm"
+                  placeholder="Search meetings, people..." className="input-field pl-11 py-2 text-sm"
                   style={{ background:"rgba(255,255,255,0.04)" }} />
                 {showSearch && (
                   <div className="absolute top-full left-0 right-0 mt-1 glass-strong rounded-xl overflow-hidden z-50">
