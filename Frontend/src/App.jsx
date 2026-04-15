@@ -14,6 +14,7 @@ import AuthSuccess from "./pages/public/AuthSuccess";
 import Dashboard from "./pages/dashboard/Dashboard";
 import CreateMeeting from "./pages/dashboard/CreateMeeting";
 import JoinMeeting from "./pages/dashboard/JoinMeeting";
+import MessagesPage from "./pages/dashboard/MessagesPage";
 
 // Meeting
 import WaitingRoom from "./pages/meeting/WaitingRoom";
@@ -55,6 +56,7 @@ export default function App() {
             <Route element={<PrivateRoute />}>
               {/* Dashboard */}
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/messages" element={<MessagesPage />} />
               <Route path="/create-meeting" element={<CreateMeeting />} />
               <Route path="/join-meeting" element={<JoinMeeting />} />
 
