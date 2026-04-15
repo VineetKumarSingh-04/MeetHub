@@ -2,56 +2,40 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../asset/logo.png";
-import api from "../../services/api";
 
 // ── CSS ───────────────────────────────────────────────────────────────────────
-const CSS = `
+export const LAYOUT_CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-  .cm-root * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .al-root * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.3); border-radius: 4px; }
 
-  .cm-glass-strong { background: rgba(17,24,39,0.8); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.1); }
-  .cm-glass       { background: rgba(17,24,39,0.65); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.07); }
+  .al-glass       { background: rgba(17,24,39,0.65); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.07); }
+  .al-glass-strong{ background: rgba(17,24,39,0.8);  backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.1); }
 
-  .cm-sidebar-item { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
-  .cm-sidebar-item:hover { background: rgba(124,58,237,0.15); }
-  .cm-sidebar-item.active {
+  .al-sidebar-item { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+  .al-sidebar-item:hover { background: rgba(124,58,237,0.15); }
+  .al-sidebar-item.active {
     background: linear-gradient(135deg,rgba(124,58,237,0.3),rgba(37,99,235,0.2));
     box-shadow: 0 0 15px rgba(124,58,237,0.2);
   }
 
-  .cm-input {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px; padding: 11px 14px; color:#fff; font-size:14px; width:100%;
+  .al-input-search {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 10px 14px 10px 40px; color:#fff; font-size:13px; width:100%;
     transition: all 0.2s; outline:none; font-family:'Plus Jakarta Sans',sans-serif;
   }
-  .cm-input:focus { border-color:rgba(124,58,237,0.5); box-shadow:0 0 0 3px rgba(124,58,237,0.1); }
-  .cm-input::placeholder { color:rgba(156,163,175,0.6); }
+  .al-input-search:focus { border-color:rgba(124,58,237,0.5); box-shadow:0 0 0 3px rgba(124,58,237,0.1); }
+  .al-input-search::placeholder { color:rgba(156,163,175,0.6); }
 
-  .cm-input-search {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px; padding: 10px 14px 10px 40px; color:#fff; font-size:13px; width:100%;
-    transition: all 0.2s; outline:none;
-  }
-  .cm-input-search:focus { border-color:rgba(124,58,237,0.5); box-shadow:0 0 0 3px rgba(124,58,237,0.1); }
-  .cm-input-search::placeholder { color:rgba(156,163,175,0.6); }
+  .al-notif-badge { position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:#ef4444; border-radius:50%; border:2px solid #0b0f2c; }
 
-  .cm-notif-badge { position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:#ef4444; border-radius:50%; border:2px solid #0b0f2c; }
-
-  @keyframes cm-slideLeft { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
-  .cm-s1{animation:cm-slideLeft 0.6s 0.1s ease forwards;opacity:0}
-  .cm-s2{animation:cm-slideLeft 0.6s 0.2s ease forwards;opacity:0}
-  .cm-s3{animation:cm-slideLeft 0.6s 0.3s ease forwards;opacity:0}
-  .cm-s4{animation:cm-slideLeft 0.6s 0.4s ease forwards;opacity:0}
-
-  @keyframes cm-fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-  .cm-fade { animation: cm-fadeUp 0.5s 0.1s ease forwards; opacity:0; }
-
-  .cm-tab-active { background: linear-gradient(135deg,#7c3aed,#2563eb); color:#fff; }
-  .cm-tab-inactive { background: rgba(255,255,255,0.05); color:#9ca3af; }
-  .cm-tab-inactive:hover { background: rgba(255,255,255,0.08); color:#fff; }
+  @keyframes al-slideLeft { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
+  .al-s1{animation:al-slideLeft 0.6s 0.1s ease forwards;opacity:0}
+  .al-s2{animation:al-slideLeft 0.6s 0.2s ease forwards;opacity:0}
+  .al-s3{animation:al-slideLeft 0.6s 0.3s ease forwards;opacity:0}
+  .al-s4{animation:al-slideLeft 0.6s 0.4s ease forwards;opacity:0}
 `;
 
 const NAV_ITEMS = [
@@ -71,7 +55,7 @@ function Icon({ d, size = 18, color, className = "" }) {
 }
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
-function Sidebar({ collapsed, setCollapsed }) {
+function Sidebar({ collapsed, setCollapsed, activeNav }) {
   const navigate = useNavigate();
   const handleNav = (id) => {
     if (id === "dashboard") navigate("/dashboard");
@@ -80,7 +64,7 @@ function Sidebar({ collapsed, setCollapsed }) {
     if (id === "settings")  navigate("/settings");
   };
   return (
-    <aside className="cm-glass-strong flex flex-col h-full relative z-30 transition-all duration-300"
+    <aside className="al-glass-strong flex flex-col h-full relative z-30 transition-all duration-300"
       style={{ width: collapsed ? 64 : 220, minWidth: collapsed ? 64 : 220 }}>
       <div className="flex items-center gap-3 px-4 py-4 border-b border-white/5">
         <img src={logo} alt="MeetHub" style={{ height:32, flexShrink:0 }} />
@@ -93,7 +77,7 @@ function Sidebar({ collapsed, setCollapsed }) {
       <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map((item, i) => (
           <button key={item.id} onClick={() => handleNav(item.id)}
-            className={`cm-sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium cm-s${i+1} text-gray-400`}>
+            className={`al-sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium al-s${i+1} ${activeNav === item.id ? "active text-white" : "text-gray-400"}`}>
             <div className="relative flex-shrink-0">
               <Icon d={item.icon} size={18} />
               {collapsed && item.badge && (
@@ -130,6 +114,7 @@ function Topbar({ user, onLogout }) {
     { label:"New Meeting",  icon:"M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z", color:"#a78bfa", action:() => navigate("/create-meeting") },
     { label:"Join Meeting", icon:"M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1", color:"#60a5fa", action:() => navigate("/join-meeting") },
     { label:"Schedule",     icon:"M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z", color:"#34d399", action:() => navigate("/create-meeting") },
+    { label:"Share Screen", icon:"M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z", color:"#fbbf24", action:() => {} },
   ];
 
   return (
@@ -142,10 +127,9 @@ function Topbar({ user, onLogout }) {
           </span>
           <input value={search} onChange={e => setSearch(e.target.value)}
             onFocus={() => setShowSearch(true)} onBlur={() => setTimeout(() => setShowSearch(false), 200)}
-            placeholder="Search meetings, people..." className="cm-input-search"
-            style={{ background:"rgba(255,255,255,0.04)" }} />
+            placeholder="Search meetings, people..." className="al-input-search" />
           {showSearch && (
-            <div className="absolute top-full left-0 right-0 mt-1 cm-glass-strong rounded-xl overflow-hidden z-50">
+            <div className="absolute top-full left-0 right-0 mt-1 al-glass-strong rounded-xl overflow-hidden z-50">
               <div className="p-3 text-xs text-gray-500 border-b border-white/5">Recent</div>
               {["Design Review","Sprint Planning"].map(r => (
                 <button key={r} className="w-full text-left px-3 py-2 text-sm hover:bg-white/5 transition flex items-center gap-2">
@@ -156,7 +140,9 @@ function Topbar({ user, onLogout }) {
           )}
         </div>
       </div>
+
       <div className="flex items-center gap-3">
+        {/* Quick Actions */}
         <div className="relative">
           <button onClick={() => { setShowQuick(q => !q); setShowNotif(false); }}
             className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-all"
@@ -166,7 +152,7 @@ function Topbar({ user, onLogout }) {
             <Icon d="M19 9l-7 7-7-7" size={14} />
           </button>
           {showQuick && (
-            <div className="absolute right-0 top-full mt-2 cm-glass-strong rounded-xl w-48 overflow-hidden z-50">
+            <div className="absolute right-0 top-full mt-2 al-glass-strong rounded-xl w-48 overflow-hidden z-50">
               {QUICK_ACTIONS.map(q => (
                 <button key={q.label} onClick={() => { q.action(); setShowQuick(false); }}
                   className="w-full text-left px-4 py-2.5 text-sm hover:bg-white/5 flex items-center gap-2 transition">
@@ -176,14 +162,16 @@ function Topbar({ user, onLogout }) {
             </div>
           )}
         </div>
+
+        {/* Notifications */}
         <div className="relative">
           <button onClick={() => { setShowNotif(n => !n); setShowQuick(false); }}
             className="relative p-2 rounded-xl hover:bg-white/5 transition">
             <Icon d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" size={18} color="#9ca3af" />
-            <span className="cm-notif-badge" />
+            <span className="al-notif-badge" />
           </button>
           {showNotif && (
-            <div className="absolute right-0 top-full mt-2 cm-glass-strong rounded-xl w-72 overflow-hidden z-50">
+            <div className="absolute right-0 top-full mt-2 al-glass-strong rounded-xl w-72 overflow-hidden z-50">
               <div className="p-3 font-semibold text-sm border-b border-white/5">Notifications</div>
               {[
                 { icon:"M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z", bg:"rgba(124,58,237,0.2)", color:"#a78bfa", text:"Design Review starts in 15 min", time:"2 min ago" },
@@ -199,6 +187,8 @@ function Topbar({ user, onLogout }) {
             </div>
           )}
         </div>
+
+        {/* Profile */}
         <div className="flex items-center gap-2 pl-3 border-l border-white/10">
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
             style={{ background:"linear-gradient(135deg,#7c3aed,#2563eb)" }}>
@@ -215,106 +205,23 @@ function Topbar({ user, onLogout }) {
   );
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
-export default function CreateMeeting() {
+// ── AppLayout ─────────────────────────────────────────────────────────────────
+export default function AppLayout({ children, activeNav = "" }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
-  const [form, setForm]           = useState({ title:"", scheduledAt:"", isInstant:false });
-  const [error, setError]         = useState("");
-  const [loading, setLoading]     = useState(false);
 
   const handleLogout = async () => { await logout(); navigate("/"); };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      const { data } = await api.post("/meetings", form);
-      navigate(`/meeting/${data.roomId}`);
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to create meeting");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <>
-      <style>{CSS}</style>
-      <div className="cm-root flex h-screen w-full overflow-hidden" style={{ background:"#0b0f2c", color:"#fff" }}>
-        <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-
+      <style>{LAYOUT_CSS}</style>
+      <div className="al-root flex h-screen w-full overflow-hidden" style={{ background:"#0b0f2c", color:"#fff" }}>
+        <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} activeNav={activeNav} />
         <div className="flex-1 flex flex-col h-full overflow-hidden">
           <Topbar user={user} onLogout={handleLogout} />
-
-          <main className="flex-1 overflow-y-auto flex items-center justify-center p-6">
-            <div className="w-full max-w-lg cm-fade">
-              {/* Header */}
-              <div className="mb-6">
-                <h1 className="text-2xl font-bold">Create a Meeting</h1>
-                <p className="text-sm text-gray-400 mt-1">Start instantly or schedule for later</p>
-              </div>
-
-              {/* Card */}
-              <div className="cm-glass rounded-2xl p-6 space-y-5">
-                {/* Tabs */}
-                <div className="flex gap-3">
-                  <button onClick={() => setForm({ ...form, isInstant:false })}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${!form.isInstant ? "cm-tab-active" : "cm-tab-inactive"}`}>
-                    <span className="flex items-center justify-center gap-2">
-                      <Icon d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" size={15} />
-                      Schedule
-                    </span>
-                  </button>
-                  <button onClick={() => setForm({ ...form, isInstant:true })}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${form.isInstant ? "cm-tab-active" : "cm-tab-inactive"}`}>
-                    <span className="flex items-center justify-center gap-2">
-                      <Icon d="M13 10V3L4 14h7v7l9-11h-7z" size={15} />
-                      Start Now
-                    </span>
-                  </button>
-                </div>
-
-                {error && (
-                  <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-xl">
-                    <Icon d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" size={16} color="#f87171" />
-                    {error}
-                  </div>
-                )}
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="text-xs text-gray-400 mb-1.5 block font-medium">Meeting Title</label>
-                    <input value={form.title} onChange={e => setForm({ ...form, title:e.target.value })}
-                      placeholder="e.g. Design Review" required className="cm-input" />
-                  </div>
-
-                  {!form.isInstant && (
-                    <div>
-                      <label className="text-xs text-gray-400 mb-1.5 block font-medium">Date & Time</label>
-                      <input type="datetime-local" value={form.scheduledAt}
-                        onChange={e => setForm({ ...form, scheduledAt:e.target.value })}
-                        required className="cm-input" />
-                    </div>
-                  )}
-
-                  <button type="submit" disabled={loading}
-                    className="w-full py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 hover:shadow-lg flex items-center justify-center gap-2"
-                    style={{ background:"linear-gradient(135deg,#7c3aed,#2563eb)", opacity: loading ? 0.7 : 1 }}>
-                    <Icon d={form.isInstant ? "M13 10V3L4 14h7v7l9-11h-7z" : "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"} size={16} />
-                    {loading ? "Creating..." : form.isInstant ? "Start Meeting" : "Schedule Meeting"}
-                  </button>
-                </form>
-
-                <button onClick={() => navigate(-1)}
-                  className="w-full py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white transition-all"
-                  style={{ background:"rgba(255,255,255,0.04)" }}>
-                  Cancel
-                </button>
-              </div>
-            </div>
+          <main className="flex-1 overflow-y-auto">
+            {children}
           </main>
         </div>
       </div>
